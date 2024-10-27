@@ -4,6 +4,8 @@
 
 package proyectofinal.proyectofinal;
 
+import fronted.FramePrincipal;
+
 /**
  *
  * @author xavi
@@ -11,6 +13,7 @@ package proyectofinal.proyectofinal;
 public class ProyectoFinal {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        FramePrincipal frame = new FramePrincipal();
+        frame.setVisible(true);
     }
 }
