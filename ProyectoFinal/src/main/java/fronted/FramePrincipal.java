@@ -4,11 +4,18 @@
  */
 package fronted;
 
+import backen.AnalizadorLexico;
+import backen.Token;
 import java.awt.Color;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Element;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 /**
@@ -17,6 +24,23 @@ import javax.swing.text.StyledDocument;
  */
 public class FramePrincipal extends javax.swing.JFrame {
 
+    
+    private List<Token> tokenCreate;
+    private List<Token> tokenTipoDato;
+    private List<Token> tokenEntero;
+    private List<Token> tokenDecimal;
+    private List<Token> tokenFecha;
+    private List<Token> tokenCadena;
+    private List<Token> tokenIdentificador;
+    private List<Token> tokenBooleano;
+    private List<Token> tokenFuncionDeAgregacion;
+    private List<Token> tokenSignos;
+    private List<Token> tokenAritmeticos;
+    private List<Token> tokenRacionales;
+    private List<Token> tokenLogicos;
+    private List<Token> tokenComentarios;
+    
+    private boolean lexicoCorrecto;
     /**
      * Creates new form FramePrincipal
      */
@@ -148,6 +172,11 @@ public class FramePrincipal extends javax.swing.JFrame {
 
         buttonAnalizar.setFont(new java.awt.Font("Courier 10 Pitch", 0, 18)); // NOI18N
         buttonAnalizar.setText("ANALIZAR");
+        buttonAnalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAnalizarActionPerformed(evt);
+            }
+        });
 
         jScrollPane2.setViewportView(jTextPaneFilas);
 
@@ -274,6 +303,11 @@ public class FramePrincipal extends javax.swing.JFrame {
         jTextPaneTexto.setEnabled(true);
     }//GEN-LAST:event_jMenu1MouseClicked
 
+    private void buttonAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAnalizarActionPerformed
+        // TODO add your handling code here:
+        analizar();
+    }//GEN-LAST:event_buttonAnalizarActionPerformed
+
     private void limpiar(){
         //metodo para limpiar componentes
        
@@ -284,6 +318,145 @@ public class FramePrincipal extends javax.swing.JFrame {
         jTextPaneTexto.setText("");
         jTextPaneTexto.setEnabled(false);
         
+    }
+
+      public void analizar() {
+        String entrada = jTextPaneTexto.getText();
+        AnalizadorLexico analizadorLexico = new AnalizadorLexico(new StringReader(entrada));
+
+        try {
+            StyledDocument doc = jTextPaneTexto.getStyledDocument();
+
+            // Definición de los colores
+            SimpleAttributeSet azul = new SimpleAttributeSet();
+            StyleConstants.setForeground(azul, Color.BLUE);
+
+            SimpleAttributeSet verde = new SimpleAttributeSet();
+            StyleConstants.setForeground(verde, Color.GREEN);
+
+            SimpleAttributeSet morado = new SimpleAttributeSet();
+            StyleConstants.setForeground(morado, new Color(75, 0, 130));
+
+            SimpleAttributeSet naranja = new SimpleAttributeSet();
+            StyleConstants.setForeground(naranja, Color.ORANGE);
+
+            SimpleAttributeSet amarillo = new SimpleAttributeSet();
+            StyleConstants.setForeground(amarillo, Color.YELLOW);
+
+            // Nuevo color fucsia
+            SimpleAttributeSet fucsia = new SimpleAttributeSet();
+            StyleConstants.setForeground(fucsia, new Color(255, 0, 255)); // Fucsia (RGB: 255, 0, 255)
+
+            SimpleAttributeSet negro = new SimpleAttributeSet();
+            StyleConstants.setForeground(negro, Color.BLACK);
+
+            SimpleAttributeSet gris = new SimpleAttributeSet();
+            StyleConstants.setForeground(gris, Color.GRAY);
+
+            // Limpiar estilos previos
+            doc.setCharacterAttributes(0, entrada.length(), new SimpleAttributeSet(), true);
+
+            // Analiza el texto y llena las listas de tokens
+            while (analizadorLexico.yylex() != AnalizadorLexico.YYEOF) {
+            }
+
+            // Obtener listas de tokens
+            tokenCreate = analizadorLexico.getTokenCreate();
+            tokenTipoDato = analizadorLexico.getTokenTipoDato();
+            tokenEntero = analizadorLexico.getTokenEntero();
+            tokenDecimal = analizadorLexico.getTokenDecimal();
+            tokenFecha = analizadorLexico.getTokenFecha();
+            tokenCadena = analizadorLexico.getTokenCadena();
+            tokenIdentificador = analizadorLexico.getTokenIdentificador();
+            tokenBooleano = analizadorLexico.getTokenBooleano();
+            tokenFuncionDeAgregacion = analizadorLexico.getTokenFuncionDeAgregacion();
+            tokenSignos = analizadorLexico.getTokenSignos();
+            tokenAritmeticos = analizadorLexico.getTokenAritmeticos();
+            tokenRacionales = analizadorLexico.getTokenRacionales();
+            tokenLogicos = analizadorLexico.getTokenLogicos();
+            tokenComentarios = analizadorLexico.getTokenComentarios();
+
+            // Aplicar los colores correspondientes
+            pintarTokens(tokenCreate, naranja, doc);
+            pintarTokens(tokenTipoDato, morado, doc);
+            pintarTokens(tokenEntero, azul, doc);
+            pintarTokens(tokenDecimal, azul, doc);
+            pintarTokens(tokenFecha, amarillo, doc);
+            pintarTokens(tokenCadena, verde, doc);
+            pintarTokens(tokenIdentificador, fucsia, doc);
+            pintarTokens(tokenBooleano, azul, doc);
+            pintarTokens(tokenFuncionDeAgregacion, azul, doc);
+            pintarTokens(tokenSignos, negro, doc);
+            pintarTokens(tokenAritmeticos, negro, doc);
+            pintarTokens(tokenRacionales, negro, doc);
+            pintarTokens(tokenLogicos, naranja, doc);
+            pintarTokens(tokenComentarios, gris, doc);
+
+            // Manejo de errores
+            List<Token> listaErrores = analizadorLexico.getTokenErrores();
+            if (!listaErrores.isEmpty()) {
+                lexicoCorrecto = false;
+                for (Token error : listaErrores) {
+                    System.out.println(error);
+                }
+            //} else {
+            //    lexicoCorrecto = true;
+            //    AnalizadorSintactico anal = new AnalizadorSintactico();
+            //    anal.procesarEstructuras(entrada, tokenCreate, tokenIdentificador, tokenTipoDato, tokenSignos, tokenEntero, tokenAritmeticos, tokenLogicos, tokenCadena, tokenFecha, tokenDecimal, tokenRacionales);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+          System.out.println("-----texto aceptado----");
+          
+          System.out.println(analizadorLexico.getTextoAceptado());
+          
+          System.out.println("--------------------------");
+    }
+
+    private void pintarTokens(List<Token> tokens, SimpleAttributeSet estilo, StyledDocument doc) {
+        try {
+            String text = doc.getText(0, doc.getLength());  // Obtener todo el texto del documento
+
+            for (Token token : tokens) {
+                int start = calcularPosicionInicial(token, text);  // Calcular la posición inicial basándose en line y column
+                int length = token.getToken().length();  // Longitud del token
+
+                // Asegurarse de que la longitud no sea 0 y la posición es válida
+                if (start >= 0 && length > 0) {
+                    doc.setCharacterAttributes(start, length, estilo, true);  // Aplica el estilo al token completo
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Método para calcular la posición inicial en el documento a partir de las
+     * líneas y columnas del token.
+     */
+    private int calcularPosicionInicial(Token token, String texto) {
+        int line = token.getLinea();   // Obtener la línea del token
+        int column = token.getColumna();  // Obtener la columna del token
+        int pos = 0;  // Posición inicial en el texto (que empezará en 0)
+
+        // Recorremos el texto línea por línea hasta alcanzar la línea deseada
+        int currentLine = 0;
+        for (int i = 0; i < texto.length(); i++) {
+            if (currentLine == line) {
+                // Si estamos en la línea correcta, la posición es la columna en esa línea
+                pos = i + column;
+                break;
+            }
+
+            // Si encontramos un salto de línea, incrementamos el contador de líneas
+            if (texto.charAt(i) == '\n') {
+                currentLine++;
+            }
+        }
+
+        return pos;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
