@@ -351,20 +351,32 @@ public class AnalizadorSintactico {
 
             List<String> palabrasSet = separarPorComa(despuesDeSET);
             List<String> palabrasWhere = separarPorComa(despuesDeWHERE);
+    
             if (palabrasSet.isEmpty()) {
                 return false;
             } else {
                 if (palabrasWhere.isEmpty()) {
                     //lo que hace sin where
+                    int c=0;
+                    boolean valido=false;
                     for (String string : palabrasSet) {
-                        
+                        if (string == null || string.trim().isEmpty()) {
+                            c = 0; // Devuelve 0 si el texto es nulo o vacío
+                        }
+                        // Divide el texto en palabras usando una expresión regular que considera espacios en blanco
+                        String[] palabras2 = string.trim().split("\\s+");
+                        c = palabras2.length;
+                       
                     }
+                    
+                    return c % 3 == 0;
+        
                 } else {
                     //lo que que hace con where
+                    return true;
                 }
             }
 
-            return true;
         } else {
             return false;
         }
@@ -375,6 +387,12 @@ public class AnalizadorSintactico {
     
     private boolean estructuraEliminacion(String sentencia){
          List<String> palabras = separarPalabras(sentencia);
+         
+         
+         
+         
+         
+         
         return true;
     }
     
