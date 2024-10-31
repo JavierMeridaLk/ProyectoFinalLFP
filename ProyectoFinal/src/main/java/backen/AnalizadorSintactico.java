@@ -20,9 +20,34 @@ public class AnalizadorSintactico {
     private List<String> reporteModificaciones = new ArrayList<>();
     private List<String> graficas = new ArrayList<>();
     private String graficasTxt = "";
+    private int numeroDeCreate = 0;
+    private int numeroDeDelete = 0;
+    private int numeroDeUpdate = 0;
+    private int numeroDeSelect = 0;
+    private int numeroDeAlter = 0;
 
     public AnalizadorSintactico() {
 
+    }
+
+    public int getNumeroDeCreate() {
+        return numeroDeCreate;
+    }
+
+    public int getNumeroDeDelete() {
+        return numeroDeDelete;
+    }
+
+    public int getNumeroDeUpdate() {
+        return numeroDeUpdate;
+    }
+
+    public int getNumeroDeSelect() {
+        return numeroDeSelect;
+    }
+
+    public int getNumeroDeAlter() {
+        return numeroDeAlter;
     }
 
     public List<String> getGraficas() {
@@ -56,12 +81,14 @@ public class AnalizadorSintactico {
         for (String sentencia : sentencias) {
             if (esEstructuraCreacionDB(sentencia)) {
                 System.out.println("Estructura correcta de creacion: " + sentencia);
+                numeroDeCreate++;
                 graficas.add(sentencia);
                 graficasTxt = graficasTxt + sentencia + "\n";
             } else if (esEstructuraCreacionTablas(sentencia)) {
                 System.out.println("Estructura correcta de creacion de tablas: " + sentencia);
                 graficas.add(sentencia);
                 graficasTxt = graficasTxt + sentencia + "\n";
+                numeroDeCreate++;
             } else if (estructuraModificadores(sentencia)) {
                 System.out.println("Estructura correcta de modificador " + sentencia);
                 graficas.add(sentencia);
@@ -235,7 +262,7 @@ public class AnalizadorSintactico {
         ArrayList<String> palabra = separarPalabras(modificadores);
 
         if (palabra.get(0).equals("ALTER") && palabra.get(1).equals("TABLE") && palabra.get(palabra.size() - 1).equals(";")) {
-
+            numeroDeAlter++;
             if (palabra.get(3).equals("ADD")) {
 
                 if (palabra.get(4).equals("COLUMN") && esDato(palabra, 6)) {
@@ -260,6 +287,7 @@ public class AnalizadorSintactico {
                 reporteModificaciones.add(palabra.get(0) + " " + palabra.get(1) + " " + palabra.get(3) + " " + palabra.get(4));
                 return true;
             } else if (palabra.get(3).equals("ALTER") && palabra.get(4).equals("COLUMN") && palabra.get(6).equals("TYPE") && esDato(palabra, 7)) {
+                numeroDeAlter++;
                 reporteModificaciones.add(palabra.get(2));
                 reporteModificaciones.add(palabra.get(0) + " " + palabra.get(1) + " " + palabra.get(3) + " " + palabra.get(4) + " " + palabra.get(6));
                 return true;
@@ -415,9 +443,12 @@ public class AnalizadorSintactico {
                     valido = false;
                 } else {
                     valido = true;
+                    numeroDeUpdate++;
+
                 }
                 if (c % 4 == 0) {
                     valido = true;
+                    numeroDeUpdate++;
                 } else {
                     valido = false;
                 }
@@ -436,8 +467,10 @@ public class AnalizadorSintactico {
         if (palabras.get(0).equals("DELETE") && palabras.get(1).equals("FROM") && palabras.get(palabras.size() - 1).equals(";")) {
 
             if (palabras.size() == 4) {
+                numeroDeDelete++;
                 return true;
             } else if (palabras.get(3).equals("WHERE")) {
+                numeroDeDelete++;
                 return true;
             }
         }

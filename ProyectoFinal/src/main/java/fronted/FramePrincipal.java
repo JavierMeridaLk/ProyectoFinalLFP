@@ -47,6 +47,11 @@ public class FramePrincipal extends javax.swing.JFrame {
     private List<String> reportesDeTablas;
     private List<String> reportesDeModificaciones;
     private String graficosTxt;
+    private int create;
+    private int delete;
+    private int update;
+    private int select;
+    private int alter;
 
     private boolean lexicoCorrecto;
 
@@ -333,6 +338,11 @@ public class FramePrincipal extends javax.swing.JFrame {
         jMenu3.add(jMenuItem9);
 
         jMenuItem10.setText("Numero de operaciones");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem10);
 
         jMenuBar1.add(jMenu3);
@@ -373,7 +383,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         Reportes reporte1 = new Reportes();
         reporte.subirTabla(reporte1.reporteErrorSintactico(erroresSintacticos));
         reporte.setVisible(true);
-        
+
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
@@ -411,10 +421,10 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
         // TODO add your handling code here:
-        
+
         Archivos archivo = new Archivos();
         archivo.guardarComo(jTextPaneTexto);
-        
+
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -431,15 +441,23 @@ public class FramePrincipal extends javax.swing.JFrame {
         Reportes reporte1 = new Reportes();
         reporte.subirTabla(reporte1.reporteModificaciones(reportesDeModificaciones));
         reporte.setVisible(true);
-        
+
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
         // TODO add your handling code here:
         Graficos graficos = new Graficos();
-       graficos.generarGraficos(graficosTxt);
-        
+        graficos.generarGraficos(graficosTxt);
+
     }//GEN-LAST:event_jMenuItem11ActionPerformed
+
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        // TODO add your handling code here:
+        reportesOperaciones reporte = new reportesOperaciones(this, true);
+        Reportes reporte1 = new Reportes();
+        reporte.subirTabla(reporte1.reporteOperaciones(create, delete, update, select, alter));
+        reporte.setVisible(true);
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void limpiar() {
         //metodo para limpiar componentes
@@ -543,8 +561,13 @@ public class FramePrincipal extends javax.swing.JFrame {
             erroresSintacticos = analizadorSintactico.getErrores();
             reportesDeTablas = analizadorSintactico.getReporteTablas();
             reportesDeModificaciones = analizadorSintactico.getReporteModificaciones();
-            graficosTxt= analizadorSintactico.getGraficasTxt();
-            
+            graficosTxt = analizadorSintactico.getGraficasTxt();
+            create = analizadorSintactico.getNumeroDeCreate();
+            delete = analizadorSintactico.getNumeroDeDelete();
+            update = analizadorSintactico.getNumeroDeUpdate();
+            select = analizadorSintactico.getNumeroDeSelect();
+            alter = analizadorSintactico.getNumeroDeAlter();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

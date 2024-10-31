@@ -13,23 +13,22 @@ import javax.swing.table.DefaultTableModel;
  * @author xavi
  */
 public class Reportes {
-    
+
     private Token token;
     private JTable table;
     private DefaultTableModel tableModel;
-    
-    public Reportes(){
-        
-    } 
-    
-     public JTable reporteErrorLexico(List<Token> errores) {
-          String[] columnNames = {"Token", "Línea", "Columna", "Descripcion"};
+
+    public Reportes() {
+
+    }
+
+    public JTable reporteErrorLexico(List<Token> errores) {
+        String[] columnNames = {"Token", "Línea", "Columna", "Descripcion"};
 
         // Crear el modelo de la tabla
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
 
-         
         // Llenar la tabla con los datos de los tokens
         for (Token token : errores) {
             Object[] row = {
@@ -41,16 +40,15 @@ public class Reportes {
             tableModel.addRow(row);
         }
         return table;
-     }
-     
-     public JTable reporteErrorSintactico(List<String> errores) {
-          String[] columnNames = {"Declaracion", "Línea", "Columna", "Descripcion"};
+    }
+
+    public JTable reporteErrorSintactico(List<String> errores) {
+        String[] columnNames = {"Declaracion", "Línea", "Columna", "Descripcion"};
 
         // Crear el modelo de la tabla
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
 
-         
         // Llenar la tabla con los datos de los tokens
         for (String texto : errores) {
             Object[] row = {
@@ -62,43 +60,62 @@ public class Reportes {
             tableModel.addRow(row);
         }
         return table;
-     }
-     
-     public JTable reporteTablas(List<String> errores) {
-          String[] columnNames = {"Nombre de Tabla:"};
+    }
+
+    public JTable reporteTablas(List<String> errores) {
+        String[] columnNames = {"Nombre de Tabla:"};
 
         // Crear el modelo de la tabla
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
 
-         
         // Llenar la tabla con los datos de los tokens
         for (String texto : errores) {
             Object[] row = {
-                texto,
-            };
+                texto,};
             tableModel.addRow(row);
         }
         return table;
-     }
-     public JTable reporteModificaciones(List<String> errores) {
-          String[] columnNames = {"Nombre de Tabla","Tipo de modificacion"};
+    }
+
+    public JTable reporteModificaciones(List<String> errores) {
+        String[] columnNames = {"Nombre de Tabla", "Tipo de modificacion"};
 
         // Crear el modelo de la tabla
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
 
-         
         // Llenar la tabla con los datos de los tokens
-         for (int i = 0; i < errores.size(); i+=2) {
-             
-             Object[] row = {
+        for (int i = 0; i < errores.size(); i += 2) {
+
+            Object[] row = {
                 errores.get(i),
-                errores.get(i+1),
-            };
+                errores.get(i + 1),};
             tableModel.addRow(row);
-         }
-        
+        }
+
         return table;
-     }
+    }
+
+    public JTable reporteOperaciones(int create, int delete, int update, int select, int alter) {
+        String[] columnNames = {"Operacion por Seccion", "Cantidad"};
+
+        // Crear el modelo de la tabla
+        tableModel = new DefaultTableModel(columnNames, 0);
+        table = new JTable(tableModel);
+
+        // Llenar la tabla con los datos de los tokens
+        Object[][] rows = {
+            {"Operacion 'Create': ", create},
+            {"Operacion 'Delete': ", delete},
+            {"Operacion 'Update': ", update},
+            {"Operacion 'Select': ", select},
+            {"Operacion 'Alter': ", alter},};
+        for (Object[] row : rows) {
+            // Aquí puedes agregar cada fila a un modelo de tabla, imprimirla, etc.
+            tableModel.addRow(row);
+        }
+
+        return table;
+    }
 }

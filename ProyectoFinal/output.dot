@@ -1,7 +1,7 @@
 digraph G {
     node [shape=box, fontname="Arial"];
     node1 [label="CREATE DATABASE\nstore"];
-    node2 [label="CREATE TABLE\nempleados\n\nid SERIAL PRIMARY KEY **\n nombre VARCHAR ( 100 ) NOT NULL **\n puesto VARCHAR ( 50 ) \n salario DECIMAL ( 10 \n 2 ) \n fecha_contratacion DATE \n departamento_id INTEGER \n email VARCHAR ( 100 ) UNIQUE **\n CONSTRAINT fk_departamento FOREIGN KEY ( departamento_id ) REFERENCES departamentos ( id ) );**\n"];
+    node2 [label="CREATE TABLE\nempleados\n\nid SERIAL PRIMARY KEY \n nombre VARCHAR ( 100 ) NOT NULL \n puesto VARCHAR ( 50 ) \n salario DECIMAL ( 10 \n 2 ) \n fecha_contratacion DATE \n departamento_id INTEGER \n email VARCHAR ( 100 ) UNIQUE \n CONSTRAINT fk_departamento FOREIGN KEY ( departamento_id ) REFERENCES departamentos ( id ) );\n"];
     node1 -> node2 [style=invis];
     node3 [label="ALTER TABLE\nempleados\n\n ADD COLUMN COLUMN fecha_nacimiento"];
     node2 -> node3 [style=invis];
