@@ -18,9 +18,19 @@ public class AnalizadorSintactico {
     private List<String> errores = new ArrayList<>();
     private List<String> reporteTablas = new ArrayList<>();
     private List<String> reporteModificaciones = new ArrayList<>();
+    private List<String> graficas = new ArrayList<>();
+    private String graficasTxt = "";
 
     public AnalizadorSintactico() {
 
+    }
+
+    public List<String> getGraficas() {
+        return graficas;
+    }
+
+    public String getGraficasTxt() {
+        return graficasTxt;
     }
 
     public List<String> getReporteTablas() {
@@ -46,10 +56,16 @@ public class AnalizadorSintactico {
         for (String sentencia : sentencias) {
             if (esEstructuraCreacionDB(sentencia)) {
                 System.out.println("Estructura correcta de creacion: " + sentencia);
+                graficas.add(sentencia);
+                graficasTxt = graficasTxt + sentencia + "\n";
             } else if (esEstructuraCreacionTablas(sentencia)) {
                 System.out.println("Estructura correcta de creacion de tablas: " + sentencia);
+                graficas.add(sentencia);
+                graficasTxt = graficasTxt + sentencia + "\n";
             } else if (estructuraModificadores(sentencia)) {
                 System.out.println("Estructura correcta de modificador " + sentencia);
+                graficas.add(sentencia);
+                graficasTxt = graficasTxt + sentencia + "\n";
             } else if (esInsercionValida(sentencia)) {
                 System.out.println("Estructura correcta de insercion " + sentencia);
                 //}else if (estructuraLectura(sentencia)) {
