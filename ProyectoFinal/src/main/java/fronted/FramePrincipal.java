@@ -6,11 +6,12 @@ package fronted;
 
 import backen.AnalizadorLexico;
 import backen.AnalizadorSintactico;
+import backen.Archivos;
 import backen.Token;
 import java.awt.Color;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -25,7 +26,6 @@ import javax.swing.text.StyledDocument;
  */
 public class FramePrincipal extends javax.swing.JFrame {
 
-    
     private List<Token> tokenCreate;
     private List<Token> tokenTipoDato;
     private List<Token> tokenEntero;
@@ -40,8 +40,9 @@ public class FramePrincipal extends javax.swing.JFrame {
     private List<Token> tokenRacionales;
     private List<Token> tokenLogicos;
     private List<Token> tokenComentarios;
-    
+
     private boolean lexicoCorrecto;
+
     /**
      * Creates new form FramePrincipal
      */
@@ -52,11 +53,10 @@ public class FramePrincipal extends javax.swing.JFrame {
         this.setTitle("Analizador SQL");
         jTextPaneFilas.setEditable(false);
         jTextPaneFilas.setEnabled(false);
-        jTextPaneFilas.setForeground(Color.LIGHT_GRAY);
         jTextPaneTexto.setEnabled(false);
+        jTextPaneFilas.setForeground(Color.LIGHT_GRAY);
         buttonAnalizar.setEnabled(false);
-        
-        
+        this.setLocationRelativeTo(null);
 
         jTextPaneTexto.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -73,45 +73,44 @@ public class FramePrincipal extends javax.swing.JFrame {
             public void changedUpdate(DocumentEvent e) {
                 actualizarConteoLineas();
             }
+
             // Método para actualizar el contador de líneas
             private void actualizarConteoLineas() {
                 if (!jTextPaneTexto.getText().isEmpty()) {
                     buttonAnalizar.setEnabled(true);
-                    
 
                 } else {
                     buttonAnalizar.setEnabled(false);
-                   
 
                 }
-                
+
                 int lineCount = jTextPaneTexto.getDocument().getDefaultRootElement().getElementCount();  // Obtener el número de líneas
-                String textoFinal="";
+                String textoFinal = "";
 
                 for (int i = 0; i < lineCount; i++) {
-                    textoFinal=textoFinal+String.valueOf((i+1)+"\n");   
+                    textoFinal = textoFinal + String.valueOf((i + 1) + "\n");
                 }
                 jTextPaneFilas.setText(textoFinal);
             }
         });
-        
+
         jTextPaneTexto.addCaretListener(e -> {
-                int dot = e.getDot(); // Posición del cursor
-                try {
-                    // Obtener el documento
-                    JTextPane textPane1 = (JTextPane) e.getSource();
-                    StyledDocument doc = textPane1.getStyledDocument();
-                    // Obtener la ubicación de la posición del cursor
-                    Element element = doc.getDefaultRootElement();
-                    int line = element.getElementIndex(dot); // Fila
-                    int column = dot - element.getElement(line).getStartOffset(); // Columna
-                    // Actualizar la etiqueta con la posición
-                    columnaLabel.setText(String.valueOf(column ));
-                    filaLabel.setText(String.valueOf(line + 1));
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
+            int dot = e.getDot(); // Posición del cursor
+            try {
+                // Obtener el documento
+                JTextPane textPane1 = (JTextPane) e.getSource();
+                StyledDocument doc = textPane1.getStyledDocument();
+                // Obtener la ubicación de la posición del cursor
+                Element element = doc.getDefaultRootElement();
+                int line = element.getElementIndex(dot); // Fila
+                int column = dot - element.getElement(line).getStartOffset(); // Columna
+                // Actualizar la etiqueta con la posición
+                columnaLabel.setText(String.valueOf(column));
+                filaLabel.setText(String.valueOf(line + 1));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
     /**
@@ -138,6 +137,10 @@ public class FramePrincipal extends javax.swing.JFrame {
         columnaLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -232,11 +235,39 @@ public class FramePrincipal extends javax.swing.JFrame {
         );
 
         jMenu1.setText("Archivo");
-        jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu1MouseClicked(evt);
+
+        jMenuItem5.setText("Cargar Archivo");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
             }
         });
+        jMenu1.add(jMenuItem5);
+
+        jMenuItem6.setText("Crear Archivo");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem6);
+
+        jMenuItem7.setText("Guardar Archivo");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem7);
+
+        jMenuItem8.setText("Guardar como...");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem8);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Generar Grafico");
@@ -298,30 +329,49 @@ public class FramePrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
-        // TODO add your handling code here:
-        limpiar();
-        jTextPaneTexto.setEnabled(true);
-    }//GEN-LAST:event_jMenu1MouseClicked
-
     private void buttonAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAnalizarActionPerformed
         // TODO add your handling code here:
         analizar();
     }//GEN-LAST:event_buttonAnalizarActionPerformed
 
-    private void limpiar(){
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        // TODO add your handling code here:
+        limpiar();
+        jTextPaneTexto.setEnabled(true);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+        Archivos archivo = new Archivos();
+        archivo.leer(jTextPaneTexto);
+        jTextPaneTexto.setEnabled(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        // TODO add your handling code here:
+        Archivos archivo = new Archivos();
+        String nombreArchivo = JOptionPane.showInputDialog(null, "Ingrese el nombre del archivo:", "Nombre del Archivo", JOptionPane.PLAIN_MESSAGE);
+        archivo.guardarTextoEnArchivo(jTextPaneTexto.getText(), nombreArchivo + ".txt");
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        // TODO add your handling code here:
+        Archivos archivo = new Archivos();
+        archivo.guardarComo(jTextPaneTexto);
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void limpiar() {
         //metodo para limpiar componentes
-       
+
         columnaLabel.setText("");
         filaLabel.setText("");
         buttonAnalizar.setEnabled(false);
         jTextPaneFilas.setText("");
         jTextPaneTexto.setText("");
-        jTextPaneTexto.setEnabled(false);
-        
+
     }
 
-      public void analizar() {
+    public void analizar() {
         String entrada = jTextPaneTexto.getText();
         AnalizadorLexico analizadorLexico = new AnalizadorLexico(new StringReader(entrada));
 
@@ -400,22 +450,22 @@ public class FramePrincipal extends javax.swing.JFrame {
                 for (Token error : listaErrores) {
                     System.out.println(error);
                 }
-            //} else {
-            //    lexicoCorrecto = true;
-            //    AnalizadorSintactico anal = new AnalizadorSintactico();
-            //    anal.procesarEstructuras(entrada, tokenCreate, tokenIdentificador, tokenTipoDato, tokenSignos, tokenEntero, tokenAritmeticos, tokenLogicos, tokenCadena, tokenFecha, tokenDecimal, tokenRacionales);
+                //} else {
+                //    lexicoCorrecto = true;
+                //    AnalizadorSintactico anal = new AnalizadorSintactico();
+                //    anal.procesarEstructuras(entrada, tokenCreate, tokenIdentificador, tokenTipoDato, tokenSignos, tokenEntero, tokenAritmeticos, tokenLogicos, tokenCadena, tokenFecha, tokenDecimal, tokenRacionales);
             }
-            
+
             AnalizadorSintactico analizadorSintactico = new AnalizadorSintactico();
             analizadorSintactico.analizar(analizadorLexico.getTextoAceptado());
         } catch (Exception e) {
             e.printStackTrace();
         }
-          System.out.println("-----texto aceptado----");
-          
-          System.out.println(analizadorLexico.getTextoAceptado());
-          
-          System.out.println("--------------------------");
+        System.out.println("-----texto aceptado----");
+
+        System.out.println(analizadorLexico.getTextoAceptado());
+
+        System.out.println("--------------------------");
     }
 
     private void pintarTokens(List<Token> tokens, SimpleAttributeSet estilo, StyledDocument doc) {
@@ -478,6 +528,10 @@ public class FramePrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
