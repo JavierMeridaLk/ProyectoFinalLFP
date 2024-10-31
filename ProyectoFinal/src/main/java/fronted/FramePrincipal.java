@@ -5,6 +5,7 @@
 package fronted;
 
 import backen.AnalizadorLexico;
+import backen.AnalizadorSintactico;
 import backen.Token;
 import java.awt.Color;
 import java.io.StringReader;
@@ -404,6 +405,9 @@ public class FramePrincipal extends javax.swing.JFrame {
             //    AnalizadorSintactico anal = new AnalizadorSintactico();
             //    anal.procesarEstructuras(entrada, tokenCreate, tokenIdentificador, tokenTipoDato, tokenSignos, tokenEntero, tokenAritmeticos, tokenLogicos, tokenCadena, tokenFecha, tokenDecimal, tokenRacionales);
             }
+            
+            AnalizadorSintactico analizadorSintactico = new AnalizadorSintactico();
+            analizadorSintactico.analizar(analizadorLexico.getTextoAceptado());
         } catch (Exception e) {
             e.printStackTrace();
         }

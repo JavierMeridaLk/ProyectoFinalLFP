@@ -231,6 +231,7 @@ ESPACIOS = [" "\r\t\b\n]
 "TEXT"              { anañirTokenTipoDeDato(yytext()); anañirTextoAceptado(yytext());}
 "BOOLEAN"           { anañirTokenTipoDeDato(yytext()); anañirTextoAceptado(yytext());}
 "SERIAL"            { anañirTokenTipoDeDato(yytext()); anañirTextoAceptado(yytext());}
+"NUMERIC"           { anañirTokenTipoDeDato(yytext()); anañirTextoAceptado(yytext());}
 "TRUE"              { anañirTokenBooleano(yytext()); anañirTextoAceptado(yytext());}
 "FALSE"             { anañirTokenBooleano(yytext()); anañirTextoAceptado(yytext());}
 "SUM"               { anañirTokenAgregacion(yytext()); anañirTextoAceptado(yytext());}
