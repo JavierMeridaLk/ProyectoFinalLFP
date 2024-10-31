@@ -56,8 +56,8 @@ public class AnalizadorSintactico {
                 //System.out.println("Estructura correcta de Lectura " + sentencia);
             } else if (estructuraActualizacion(sentencia)) {
                 System.out.println("Estructura correcta de Actualizacion " + sentencia);
-                // }else if (estructuraEliminacion(sentencia)) {
-                //System.out.println("Estructura correcta de Eliminacion " + sentencia);
+            } else if (estructuraEliminacion(sentencia)) {
+                System.out.println("Estructura correcta de Eliminacion " + sentencia);
             } else {
                 errores.add(sentencia);
             }
@@ -379,26 +379,34 @@ public class AnalizadorSintactico {
             if (palabrasSet.isEmpty()) {
                 return false;
             } else {
-                if (palabrasWhere.isEmpty()) {
-                    //lo que hace sin where
-                    int c = 0;
-                    boolean valido = false;
-                    for (String string : palabrasSet) {
-                        if (string == null || string.trim().isEmpty()) {
-                            c = 0; // Devuelve 0 si el texto es nulo o vacío
-                        }
-                        // Divide el texto en palabras usando una expresión regular que considera espacios en blanco
-                        String[] palabras2 = string.trim().split("\\s+");
-                        c = palabras2.length;
 
+                int c = 0;
+                boolean valido = false;
+
+                for (String string : palabrasSet) {
+                    if (string == null || string.trim().isEmpty()) {
+                        c = 0; // Devuelve 0 si el texto es nulo o vacío
                     }
+                    // Divide el texto en palabras usando una expresión regular que considera espacios en blanco
+                    String[] palabras2 = string.trim().split("\\s+");
 
-                    return c % 3 == 0;
+                    System.out.println(palabras2.length);
+                    c = palabras2.length;
 
-                } else {
-                    //lo que que hace con where
-                    return true;
                 }
+
+                if (palabrasWhere.equals("")) {
+                    valido = false;
+                } else {
+                    valido = true;
+                }
+                if (c % 4 == 0) {
+                    valido = true;
+                } else {
+                    valido = false;
+                }
+
+                return valido;
             }
 
         } else {
@@ -409,7 +417,16 @@ public class AnalizadorSintactico {
     private boolean estructuraEliminacion(String sentencia) {
         List<String> palabras = separarPalabras(sentencia);
 
-        return true;
+        if (palabras.get(0).equals("DELETE") && palabras.get(1).equals("FROM") && palabras.get(palabras.size() - 1).equals(";")) {
+
+            if (palabras.size() == 4) {
+                return true;
+            } else if (palabras.get(3).equals("WHERE")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
