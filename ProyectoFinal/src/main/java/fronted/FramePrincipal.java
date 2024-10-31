@@ -7,6 +7,7 @@ package fronted;
 import backen.AnalizadorLexico;
 import backen.AnalizadorSintactico;
 import backen.Archivos;
+import backen.Reportes;
 import backen.Token;
 import java.awt.Color;
 import java.io.StringReader;
@@ -40,6 +41,10 @@ public class FramePrincipal extends javax.swing.JFrame {
     private List<Token> tokenRacionales;
     private List<Token> tokenLogicos;
     private List<Token> tokenComentarios;
+    private List<Token> tokenError;
+    private List<String> erroresSintacticos;
+    private List<String> reportesDeTablas;
+    private List<String> reportesDeModificaciones;
 
     private boolean lexicoCorrecto;
 
@@ -123,18 +128,21 @@ public class FramePrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuBar2 = new javax.swing.JMenuBar();
+        jMenu4 = new javax.swing.JMenu();
+        jMenu5 = new javax.swing.JMenu();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextPaneTexto = new javax.swing.JTextPane();
-        buttonAnalizar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPaneFilas = new javax.swing.JTextPane();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         filaLabel = new javax.swing.JLabel();
         columnaLabel = new javax.swing.JLabel();
+        buttonAnalizar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
@@ -146,12 +154,20 @@ public class FramePrincipal extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
 
+        jMenu4.setText("File");
+        jMenuBar2.add(jMenu4);
+
+        jMenu5.setText("Edit");
+        jMenuBar2.add(jMenu5);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
+        jPanel1.setBorder(null);
 
         jLabel1.setFont(new java.awt.Font("Courier 10 Pitch", 0, 36)); // NOI18N
         jLabel1.setText("ANALIZADOR SQL");
@@ -167,20 +183,12 @@ public class FramePrincipal extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(244, 7, 7)));
+        jPanel2.setBorder(null);
 
         jScrollPane1.setViewportView(jTextPaneTexto);
-
-        buttonAnalizar.setFont(new java.awt.Font("Courier 10 Pitch", 0, 18)); // NOI18N
-        buttonAnalizar.setText("ANALIZAR");
-        buttonAnalizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonAnalizarActionPerformed(evt);
-            }
-        });
 
         jScrollPane2.setViewportView(jTextPaneFilas);
 
@@ -202,12 +210,11 @@ public class FramePrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 999, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(buttonAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(filaLabel)
@@ -226,13 +233,19 @@ public class FramePrincipal extends javax.swing.JFrame {
                     .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonAnalizar)
                     .addComponent(columnaLabel)
                     .addComponent(jLabel3)
                     .addComponent(filaLabel)
-                    .addComponent(jLabel2))
-                .addContainerGap())
+                    .addComponent(jLabel2)))
         );
+
+        buttonAnalizar.setFont(new java.awt.Font("Courier 10 Pitch", 0, 18)); // NOI18N
+        buttonAnalizar.setText("ANALIZAR");
+        buttonAnalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAnalizarActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("Archivo");
 
@@ -276,6 +289,11 @@ public class FramePrincipal extends javax.swing.JFrame {
         jMenu3.setText("Reportes");
 
         jMenuItem2.setText("Reporte Lexico");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem2);
 
         jMenuItem3.setText("Reporte Sintactico´");
@@ -286,13 +304,24 @@ public class FramePrincipal extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem3);
 
-        jMenuItem4.setText("jMenuItem4");
+        jMenuItem4.setText("Reporte de Tablas");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
             }
         });
         jMenu3.add(jMenuItem4);
+
+        jMenuItem9.setText("Tablas modificadas");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem9);
+
+        jMenuItem10.setText("Numero de operaciones");
+        jMenu3.add(jMenuItem10);
 
         jMenuBar1.add(jMenu3);
 
@@ -302,11 +331,14 @@ public class FramePrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -314,7 +346,9 @@ public class FramePrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonAnalizar)
+                .addGap(2, 2, 2)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -323,10 +357,19 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
+        reportesErrorSintacticos reporte = new reportesErrorSintacticos(this, true);
+        Reportes reporte1 = new Reportes();
+        reporte.subirTabla(reporte1.reporteErrorSintactico(erroresSintacticos));
+        reporte.setVisible(true);
+        
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
+        reportesTablas reporte = new reportesTablas(this, true);
+        Reportes reporte1 = new Reportes();
+        reporte.subirTabla(reporte1.reporteTablas(reportesDeTablas));
+        reporte.setVisible(true);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void buttonAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAnalizarActionPerformed
@@ -356,9 +399,28 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
         // TODO add your handling code here:
+        
         Archivos archivo = new Archivos();
         archivo.guardarComo(jTextPaneTexto);
+        
     }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        reportesErrorToken reporte = new reportesErrorToken(this, true);
+        Reportes reporte1 = new Reportes();
+        reporte.subirTabla(reporte1.reporteErrorLexico(tokenError));
+        reporte.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        // TODO add your handling code here:
+        reportesModificaciones reporte = new reportesModificaciones(this, true);
+        Reportes reporte1 = new Reportes();
+        reporte.subirTabla(reporte1.reporteModificaciones(reportesDeModificaciones));
+        reporte.setVisible(true);
+        
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     private void limpiar() {
         //metodo para limpiar componentes
@@ -426,6 +488,7 @@ public class FramePrincipal extends javax.swing.JFrame {
             tokenRacionales = analizadorLexico.getTokenRacionales();
             tokenLogicos = analizadorLexico.getTokenLogicos();
             tokenComentarios = analizadorLexico.getTokenComentarios();
+            tokenError = analizadorLexico.getTokenErrores();
 
             // Aplicar los colores correspondientes
             pintarTokens(tokenCreate, naranja, doc);
@@ -458,6 +521,9 @@ public class FramePrincipal extends javax.swing.JFrame {
 
             AnalizadorSintactico analizadorSintactico = new AnalizadorSintactico();
             analizadorSintactico.analizar(analizadorLexico.getTextoAceptado());
+            erroresSintacticos = analizadorSintactico.getErrores();
+            reportesDeTablas = analizadorSintactico.getReporteTablas();
+            reportesDeModificaciones = analizadorSintactico.getReporteModificaciones();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -523,8 +589,12 @@ public class FramePrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -532,6 +602,7 @@ public class FramePrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

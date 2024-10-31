@@ -256,4 +256,4 @@ ESPACIOS = [" "\r\t\b\n]
 "AND"               { anañirTokenLogicos(yytext()); anañirTextoAceptado(yytext());}
 "OR"                { anañirTokenLogicos(yytext()); anañirTextoAceptado(yytext());}
 "NOT"               { anañirTokenLogicos(yytext()); anañirTextoAceptado(yytext());}
-.                   { anañirTokenErrores("ERROR>> Linea: " + yyline + ", columna: " + yycolumn + ", Token -> " + yytext()); }
+.                   { anañirTokenErrores(yytext()); }

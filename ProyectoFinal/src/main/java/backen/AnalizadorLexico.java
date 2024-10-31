@@ -956,7 +956,7 @@ public void addListaTokens(List<Token> lista){
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { anañirTokenErrores("ERROR>> Linea: " + yyline + ", columna: " + yycolumn + ", Token -> " + yytext());
+            { anañirTokenErrores(yytext());
             }
           // fall through
           case 18: break;

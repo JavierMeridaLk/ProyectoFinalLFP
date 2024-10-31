@@ -16,9 +16,23 @@ public class AnalizadorSintactico {
 
     private List<String> sentencias = new ArrayList<>();
     private List<String> errores = new ArrayList<>();
+    private List<String> reporteTablas = new ArrayList<>();
+    private List<String> reporteModificaciones = new ArrayList<>();
 
     public AnalizadorSintactico() {
 
+    }
+
+    public List<String> getReporteTablas() {
+        return reporteTablas;
+    }
+
+    public List<String> getReporteModificaciones() {
+        return reporteModificaciones;
+    }
+
+    public List<String> getErrores() {
+        return errores;
     }
 
     public void analizar(String textoAceptado) {
@@ -38,12 +52,12 @@ public class AnalizadorSintactico {
                 System.out.println("Estructura correcta de modificador " + sentencia);
             } else if (esInsercionValida(sentencia)) {
                 System.out.println("Estructura correcta de insercion " + sentencia);
-            //}else if (estructuraLectura(sentencia)) {
+                //}else if (estructuraLectura(sentencia)) {
                 //System.out.println("Estructura correcta de Lectura " + sentencia);
-            }else if (estructuraActualizacion(sentencia)) {
+            } else if (estructuraActualizacion(sentencia)) {
                 System.out.println("Estructura correcta de Actualizacion " + sentencia);
-            }else if (estructuraEliminacion(sentencia)) {
-                System.out.println("Estructura correcta de Eliminacion " + sentencia);
+                // }else if (estructuraEliminacion(sentencia)) {
+                //System.out.println("Estructura correcta de Eliminacion " + sentencia);
             } else {
                 errores.add(sentencia);
             }
@@ -132,7 +146,7 @@ public class AnalizadorSintactico {
                     declaracion = "";
                 }
             }
-
+            reporteTablas.add(palabras.get(2));
         } else {
             esCorrecto = false;
         }
@@ -209,22 +223,36 @@ public class AnalizadorSintactico {
             if (palabra.get(3).equals("ADD")) {
 
                 if (palabra.get(4).equals("COLUMN") && esDato(palabra, 6)) {
+                    reporteModificaciones.add(palabra.get(2));
+                    reporteModificaciones.add(palabra.get(0) + " " + palabra.get(1) + " " + palabra.get(3) + " " + palabra.get(4));
                     return true;
-                } else if (palabra.get(4).equals("CONSTRAINT") && palabra.get(6).equals("FOREIGN") && palabra.get(7).equals("KEY") && palabra.get(9).equals("REFERENCES") && palabra.get(11).equals("(") && palabra.get(13).equals(")")) {
+                } else if (palabra.get(4).equals("CONSTRAINT") && palabra.get(6).equals("FOREIGN") && palabra.get(7).equals("KEY") && palabra.get(11).equals("REFERENCES") && palabra.get(13).equals("(") && palabra.get(15).equals(")")) {
+                    reporteModificaciones.add(palabra.get(2));
+                    reporteModificaciones.add(palabra.get(0) + " " + palabra.get(1) + " " + palabra.get(3) + " " + palabra.get(4) + " " + palabra.get(6) + " " + palabra.get(7) + " " + palabra.get(9));
                     return true;
                 } else if (palabra.get(4).equals("CONSTRAINT") && palabra.get(6).equals("UNIQUE") && palabra.get(7).equals("(") && palabra.get(9).equals(")")) {
+                    reporteModificaciones.add(palabra.get(2));
+                    reporteModificaciones.add(palabra.get(0) + " " + palabra.get(1) + " " + palabra.get(3) + " " + palabra.get(4) + " " + palabra.get(6));
                     return true;
                 } else if (palabra.get(4).equals("CONSTRAINT") && esDato(palabra, 6)) {
+                    reporteModificaciones.add(palabra.get(2));
+                    reporteModificaciones.add(palabra.get(0) + " " + palabra.get(1) + " " + palabra.get(3) + " " + palabra.get(4));
                     return true;
                 }
-            } else if (palabra.get(3).equals("DROP") && palabra.get(4).equals("COLUMN") && palabra.size() == 6) {
+            } else if (palabra.get(3).equals("DROP") && palabra.get(4).equals("COLUMN") && palabra.size() == 7) {
+                reporteModificaciones.add(palabra.get(2));
+                reporteModificaciones.add(palabra.get(0) + " " + palabra.get(1) + " " + palabra.get(3) + " " + palabra.get(4));
                 return true;
             } else if (palabra.get(3).equals("ALTER") && palabra.get(4).equals("COLUMN") && palabra.get(6).equals("TYPE") && esDato(palabra, 7)) {
+                reporteModificaciones.add(palabra.get(2));
+                reporteModificaciones.add(palabra.get(0) + " " + palabra.get(1) + " " + palabra.get(3) + " " + palabra.get(4) + " " + palabra.get(6));
                 return true;
             }
 
         } else if (palabra.get(0).equals("DROP") && palabra.get(1).equals("TABLE") && palabra.get(2).equals("IF")
                 && palabra.get(3).equals("EXIST") && palabra.get(5).equals("CASCADE") && palabra.get(6).equals(";")) {
+            reporteModificaciones.add(palabra.get(4));
+            reporteModificaciones.add(palabra.get(0) + " " + palabra.get(1) + " " + palabra.get(2) + " " + palabra.get(3) + " " + palabra.get(5));
             return true;
         } else {
 
@@ -262,7 +290,7 @@ public class AnalizadorSintactico {
         }
 
         // Verifica que la sentencia inicie con "INSERT INTO"
-        if (!palabras.get(0).equalsIgnoreCase("INSERT") || !palabras.get(1).equalsIgnoreCase("INTO")|| !palabras.get(palabras.size()-1).equalsIgnoreCase(";")) {
+        if (!palabras.get(0).equalsIgnoreCase("INSERT") || !palabras.get(1).equalsIgnoreCase("INTO") || !palabras.get(palabras.size() - 1).equalsIgnoreCase(";")) {
             return false;
         }
 
@@ -305,7 +333,7 @@ public class AnalizadorSintactico {
         } else {
             List<String> palabrasParentesis1 = separarPorComa(parentesis);
             List<String> palabrasParentesis2 = separarPorComa(parentesis2);
-            
+
             return palabrasParentesis1.size() != palabrasParentesis2.size();
         }
 
@@ -323,10 +351,6 @@ public class AnalizadorSintactico {
         return resultado;
     }
 
-    
-    
-    
-    
     private boolean estructuraActualizacion(String sentencia) {
         List<String> palabras = separarPalabras(sentencia);
         String despuesDeSET = "";
@@ -351,14 +375,14 @@ public class AnalizadorSintactico {
 
             List<String> palabrasSet = separarPorComa(despuesDeSET);
             List<String> palabrasWhere = separarPorComa(despuesDeWHERE);
-    
+
             if (palabrasSet.isEmpty()) {
                 return false;
             } else {
                 if (palabrasWhere.isEmpty()) {
                     //lo que hace sin where
-                    int c=0;
-                    boolean valido=false;
+                    int c = 0;
+                    boolean valido = false;
                     for (String string : palabrasSet) {
                         if (string == null || string.trim().isEmpty()) {
                             c = 0; // Devuelve 0 si el texto es nulo o vacío
@@ -366,11 +390,11 @@ public class AnalizadorSintactico {
                         // Divide el texto en palabras usando una expresión regular que considera espacios en blanco
                         String[] palabras2 = string.trim().split("\\s+");
                         c = palabras2.length;
-                       
+
                     }
-                    
+
                     return c % 3 == 0;
-        
+
                 } else {
                     //lo que que hace con where
                     return true;
@@ -382,21 +406,10 @@ public class AnalizadorSintactico {
         }
     }
 
+    private boolean estructuraEliminacion(String sentencia) {
+        List<String> palabras = separarPalabras(sentencia);
 
-    
-    
-    private boolean estructuraEliminacion(String sentencia){
-         List<String> palabras = separarPalabras(sentencia);
-         
-         
-         
-         
-         
-         
         return true;
     }
-    
-    
-    
-    
+
 }
