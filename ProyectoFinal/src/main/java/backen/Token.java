@@ -9,13 +9,13 @@ package backen;
  * @author xavi
  */
 public class Token {
-   
+
     private String token;
     private int linea;
     private int columna;
     private String tipo;
     private int inicio;
-    
+
     public Token(String token, int linea, int columna, String tipo, int inicio) {
         this.token = token;
         this.linea = linea;
@@ -23,8 +23,6 @@ public class Token {
         this.tipo = tipo;
         this.inicio = inicio;
     }
-
-
 
     public String getToken() {
         return token;
@@ -65,6 +63,5 @@ public class Token {
     public void setInicio(int inicio) {
         this.inicio = inicio;
     }
-    
-    
+
 }

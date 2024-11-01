@@ -63,7 +63,6 @@ public class reportesErrorSintacticos extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
 
     public void subirTabla(JTable tabla) {
         tabla1 = tabla;

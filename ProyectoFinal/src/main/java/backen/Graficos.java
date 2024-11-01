@@ -122,7 +122,7 @@ public class Graficos {
             e.printStackTrace();
         }
 
-        System.out.println("Archivo Graphviz generado como 'output.dot'. Puedes convertirlo usando Graphviz.");
+        System.out.println("Archivo Graphviz generado como 'Grafica DDL DB.dot'.");
         generarImagen();
     }
 

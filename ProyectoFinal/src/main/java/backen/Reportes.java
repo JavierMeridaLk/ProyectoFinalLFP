@@ -14,7 +14,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Reportes {
 
-    private Token token;
     private JTable table;
     private DefaultTableModel tableModel;
 

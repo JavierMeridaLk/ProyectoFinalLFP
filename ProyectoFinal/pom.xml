@@ -11,6 +11,52 @@
         <maven.compiler.target>21</maven.compiler.target>
         <exec.mainClass>proyectofinal.proyectofinal.ProyectoFinal</exec.mainClass>
     </properties>
+    <build>
+        <plugins>
+            <!-- Plugin para empaquetar con dependencias -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>proyectofinal.proyectofinal.ProyectoFinal</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Plugin para manejar la compilación y empaquetado -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>proyectofinal.proyectofinal.ProyectoFinal</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
     <dependencies>
         <dependency>
             <groupId>guru.nidi</groupId>
